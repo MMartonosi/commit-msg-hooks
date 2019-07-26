@@ -28,7 +28,9 @@ def main(argv=None):
         with open(git_hooks_file, "w") as f:
             f.write("".join(script_content))
 
-        os.rename(git_hooks_file, os.path.join(git_hooks_dir, "commit-msg"))
+        new_file = os.path.join(git_hooks_dir, "commit-msg")
+        os.rename(git_hooks_file, new_file)
+        os.system(f"chmod +x {new_file}")
     except Exception as e:
         print(e)
         retval = 1
