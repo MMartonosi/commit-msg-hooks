@@ -12,6 +12,7 @@ def get_allowed_words_as_tuple():
 
         return retval
 
+
 def main(argv=None):
     retval = 0
     git_hooks_dir = os.path.join(os.getcwd(), ".git", "hooks")
@@ -21,7 +22,8 @@ def main(argv=None):
         with open(os.path.join(ROOT_DIR, "script")) as f:
             script_content = f.readlines()
             allowed_verbs_index = script_content.index("ALLOWED_VERBS = (\"\",)\n")
-            script_content[allowed_verbs_index] = f'ALLOWED_VERBS = {get_allowed_words_as_tuple()}'
+            script_content[
+                allowed_verbs_index] = f'ALLOWED_VERBS = {get_allowed_words_as_tuple()}'
 
         with open(git_hooks_file, "w") as f:
             f.write("".join(script_content))
