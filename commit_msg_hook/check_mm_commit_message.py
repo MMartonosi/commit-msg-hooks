@@ -1,17 +1,35 @@
 import os
 
+ROOT_DIR = os.path.abspath(os.path.join(os.path.abspath(os.path.dirname(__file__))))
+
+
+def get_allowed_words_as_tuple():
+    with open(os.path.join(ROOT_DIR, "allowed_verbs")) as f:
+        retval = []
+        verbs = f.readlines()
+        for verb in verbs:
+            retval.append(verb.strip("\n"))
+
+        return retval
 
 def main(argv=None):
     retval = 0
-    git_hooks_file = os.path.join(os.getcwd(), ".git", "hooks", "commit-msg.example")
-    with open(git_hooks_file) as f:
-        f.write("#!/usr/bin/python")
-        # user_data = data.split("[user]")[1]
-        # user_email = user_data.split("email = ")[1]
-        # if not "@mediamonks.com" in user_email:
-        #     print("Email address used in this git repo doesn't "
-        #           "seem to have mediamonks domain")
-        #     retval = 1
+    git_hooks_dir = os.path.join(os.getcwd(), ".git", "hooks")
+    git_hooks_file = os.path.join(git_hooks_dir, "commit-msg.sample")
+
+    try:
+        with open(os.path.join(ROOT_DIR, "script")) as f:
+            script_content = f.readlines()
+            allowed_verbs_index = script_content.index("ALLOWED_VERBS = (\"\",)\n")
+            script_content[allowed_verbs_index] = f'ALLOWED_VERBS = {get_allowed_words_as_tuple()}'
+
+        with open(git_hooks_file, "w") as f:
+            f.write("".join(script_content))
+
+        os.rename(git_hooks_file, os.path.join(git_hooks_dir, "commit-msg"))
+    except Exception as e:
+        print(e)
+        retval = 1
 
     return retval
 

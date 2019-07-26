@@ -7,18 +7,14 @@
 
 import sys
 
-
-def get_dictionary():
-    allowed_words = ("Add", "Edit", "Delete")
-    return allowed_words
-
+ALLOWED_VERBS = ("",)
 
 def main(msg=None):
     commit_msg_file = sys.argv[1]
     try:
         with open(commit_msg_file) as f:
             message_head = f.readline()
-            if message_head.partition(" ")[0].strip() not in ("Add", "Edit", "Delete"):
+            if message_head.partition(" ")[0].strip() not in ALLOWED_VERBS:
                 print(
                     'Check for commit message .........................................'
                     '.......' + '\x1b[0;37;41m' + 'Failed' + '\x1b[0m')
