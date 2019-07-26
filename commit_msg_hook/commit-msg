@@ -1,0 +1,40 @@
+#!/usr/bin/python
+#
+# This script is intended to be run as a commit-msg script in a GIT
+# repository and check the structure of commit message such that first word:
+#    - Is capitalized.
+#    - Is verb in imperative form.
+
+import sys
+
+
+def get_dictionary():
+    allowed_words = ("Add", "Edit", "Delete")
+    return allowed_words
+
+
+def main(msg=None):
+    commit_msg_file = sys.argv[1]
+    try:
+        with open(commit_msg_file) as f:
+            message_head = f.readline()
+            if message_head.partition(" ")[0].strip() not in ("Add", "Edit", "Delete"):
+                print(
+                    'Check for commit message .........................................'
+                    '.......' + '\x1b[0;37;41m' + 'Failed' + '\x1b[0m')
+                return 1
+    except EarlyExit:
+        return 1
+    except FatalError as e:
+        print(e.args[0])
+        return 1
+    except KeyboardInterrupt:
+        return 1
+
+    print(
+        'Check for commit message ................................................' +
+        '\x1b[0;37;42m' + 'Passed' + '\x1b[0m')
+
+
+if __name__ == '__main__':
+    exit(main())
